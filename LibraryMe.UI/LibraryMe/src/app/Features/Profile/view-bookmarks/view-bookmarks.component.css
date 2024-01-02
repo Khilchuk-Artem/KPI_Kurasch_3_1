@@ -1,0 +1,13 @@
+.bookmark{
+    display: flex;
+    justify-content: space-between;
+    background-color: #dde1e5;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 1rem;
+
+}
+.link{
+    margin-top: auto;
+    margin-bottom: auto;
+}

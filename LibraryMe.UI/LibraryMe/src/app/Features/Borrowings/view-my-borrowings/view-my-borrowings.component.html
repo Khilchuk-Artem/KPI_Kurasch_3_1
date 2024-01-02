@@ -1,0 +1,24 @@
+<div class="container">
+    <h1>My borrowings:</h1>
+    <table>
+        <thead>
+        <tr>
+            <th >Date created</th>
+            <th >Status</th>
+            <th style="width:10%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let borrowing of borrowings">
+            <td>{{ borrowing.createdDate }}</td>
+            <td>
+                <div [ngClass]="getBoxClass(borrowing.status)">{{ borrowing.status }}</div>
+            </td>
+            <td>
+                <button class="light-btn" [routerLink]="[borrowing.borrowingId]">View</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+

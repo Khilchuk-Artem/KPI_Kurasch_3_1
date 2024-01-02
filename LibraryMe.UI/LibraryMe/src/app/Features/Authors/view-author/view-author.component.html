@@ -1,0 +1,19 @@
+<div *ngIf="author" class="container">
+  <div class="author-info">
+    <img class="author-pic" [src]="author.imageUrl" alt="Author Image">
+    <div>
+      <h1>{{ author.name }}  {{author.patronymic || ''}} {{ author.surname }}</h1>
+      <p>{{ author.dateOfBirth | date: 'yyyy' }} - {{ author.dateOfDeath | date: 'yyyy' || 'Present' }}</p>
+      <p>Biography:</p>
+      <p>{{ author.biography }}</p>
+      <button class="btn-primary" [routerLink]="['edit']" *ngIf="isLibarian()">Edit</button>
+    </div>
+  </div>
+  <h2>Books:</h2>
+  <div class="books-display">
+    <div *ngFor="let book of author.books" class="book-card-container">
+      <div><img class="book-card-img" [src]="book.imageUrl" alt="Book Image"></div>
+      <a class="book-title" [routerLink]="['/books/'+book.bookId]">{{ book.title }}</a>
+    </div>
+  </div>
+</div>

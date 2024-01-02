@@ -1,0 +1,65 @@
+<div class="container">
+  <h1>Add a book</h1>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+    <input type="file" (change)="onFileSelected($event)" formControlName="file"/>
+    <div class="fields-grid">
+      <div class="row">
+        <div>
+          <!-- Add other form controls as needed -->
+          <label for="title" class="field-label">Input book name</label>
+          <input type="text" id="title" placeholder="Book title" class="text-field" formControlName="title">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="multi-select-column">
+          <label class="field-label">Select genres</label>
+          <ng-select [items]="genres | async"
+                     #genreSelect
+                     bindLabel="name"
+                     bindValue="id"
+                     placeholder="Select genres"
+                     [(ngModel)]="selectedGenre"
+                     (change)="changeGenre($event)">
+          </ng-select>
+          <div class="selected-items-list">
+            <div *ngFor="let genre of selectedGenres">
+              <div class="selected-item-row">
+                <div>
+                  <p>{{genre.name}}</p>
+                </div>
+                <button (click)="removeGenre(genre)" class="close-btn">X</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="multi-select-column">
+          <label class="field-label">Select authors</label>
+          <ng-select [items]="authors | async"
+                     #authorSelect
+                     bindLabel="name"
+                     bindValue="selectedAuthorLink"
+                     placeholder="Select authors"
+                     [(ngModel)]="selectedAuthorLink"
+                     (change)="changeAuthorLink($event)">
+          </ng-select>
+          <div class="selected-items-list">
+            <div *ngFor="let author of selectedAuthors">
+              <div class="selected-item-row">
+                <div>
+                  <p>{{author.name}}</p>
+                </div>
+                <button (click)="removeAuthor(author)" class="close-btn">X</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <label for="biography" class="field-label">Input description</label>
+      <textarea id="biography" rows="10" class="short-info-input" formControlName="description"></textarea>
+    </div>
+    <button type="submit" class="btn-primary">Add</button>
+  </form>
+</div>

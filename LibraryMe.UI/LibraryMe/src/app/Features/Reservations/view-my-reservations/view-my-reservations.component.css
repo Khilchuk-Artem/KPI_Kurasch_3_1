@@ -1,0 +1,109 @@
+tr{
+    background-color: #dde1e5;
+}
+th, td {
+    border-bottom: 1px solid white;
+    padding: 10px;
+    text-align: left;
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.light-btn{
+    width: 150px;
+    font-size: 1.5rem;
+}
+.red-box{
+    text-align: center;
+    padding: 8px;
+    color: red;
+    background-color: #ebd5d5;
+    border-radius: 25px;
+    width: 130px;
+    border: 0.1px red solid;
+}
+.blue-box{
+    text-align: center;
+    padding: 8px;
+    color: #007bff;
+    background-color: #d0f1fc;
+    border-radius: 25px;
+    width: 130px;
+    border: 0.1px #007bff solid;
+}
+.green-box{
+    text-align: center;
+    padding: 8px;
+    color: #62cd5c;
+    background-color: #e9f9e7;
+    border-radius: 25px;
+    width: 130px;
+    border: 0.1px #62cd5c solid;
+}
+.row{
+    display: flex;
+}
+.search-bar{
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-right: 4rem;
+    border-radius: 0.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-color: #111827;
+    border-style: double;
+    margin-bottom: 1rem;
+
+}
+.search-lupa{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0.75rem;
+    margin-right: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.lupa-img{
+    max-width: 18px;
+}
+.checkbox{
+    margin-bottom: 1rem;
+}
+.date-selection{
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.yellow-box{
+    text-align: center;
+    padding: 8px;
+    color: #b6bf39;
+    background-color: #dfe1c1;
+    border-radius: 25px;
+    width: 130px;
+    border: 0.1px #b6bf39 solid;
+}
+.orange-box{
+  text-align: center;
+  padding: 8px;
+  color: #cf9335;
+  background-color: #f3e1c4;
+  border-radius: 25px;
+  width: 130px;
+  border: 0.1px #cf9335 solid;
+}

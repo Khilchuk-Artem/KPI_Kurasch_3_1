@@ -1,0 +1,8 @@
+<div class="container">
+  <h1>Visitor card №{{visitorCard.id}}</h1>
+  <p>Name: {{visitorCard.name}}</p>
+  <p>Surname: {{visitorCard.surname}}</p>
+  <p>Patronymic: {{visitorCard.patronymic}}</p>
+  <p>Phone number: {{visitorCard.phoneNumber}}</p>
+  <button class="btn-primary" *ngIf="isLibrarian()" [routerLink]="['edit']">Edit</button>
+</div>

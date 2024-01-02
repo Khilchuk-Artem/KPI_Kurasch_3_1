@@ -1,0 +1,29 @@
+<div class="container">
+    <h1>Bookbag:</h1>
+    <div class="row">
+        <div style="width: 60%">
+            <div *ngIf="!books || books.length === 0">
+                <p>No books in bookbag yet</p>
+            </div>
+            <div class="selected-item-row" *ngFor="let book of books">
+                <div>
+                    <h3>{{book.title}}</h3>
+                    <p><ng-container *ngFor="let author of book?.authors; let i = index">
+                        <a [routerLink]="['/authors', author.authorId]">{{ author.name }}</a>
+                        <span *ngIf="i!==(book?.authors?.length ?? 0)-1">, </span>
+                    </ng-container></p>
+                </div>
+                <button class="close-btn" (click)="onRemove(book)">X</button>
+            </div>
+        </div>
+
+        <div class="item-container">
+            <h3>Estimated checkout date:</h3>
+            <p>{{currDate|date: 'dd.MM.yy'}}</p>
+            <h3>Estimated return date:</h3>
+            <p>{{getEstimDate()| date: 'dd.MM.yy'}}</p>
+        </div>
+    </div>
+    <button class="btn-primary" (click)="onReserve()" [disabled]="!hasBooks()">Reserve</button>
+    <p>*Reservation would be available for checkout for only 8 hours</p>
+</div>

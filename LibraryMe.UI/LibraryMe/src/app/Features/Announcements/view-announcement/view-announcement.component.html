@@ -1,0 +1,10 @@
+<div class="container" *ngIf="announcement">
+    <h1>{{ announcement.title }}</h1>
+    <button class="btn-primary" [routerLink]="['edit']" *ngIf="isLibarian()">Edit</button>
+
+    <p>{{ announcement.dateCreated | date: 'HH:mm, dd.MM.yy' }}</p>
+  <ng-container *ngFor="let line of announcement.content.split('\n')">
+    <p>{{ line}}</p>
+  </ng-container>
+    <button class="btn-primary" [routerLink]="['/announcements']">Back to announcements</button>
+</div>

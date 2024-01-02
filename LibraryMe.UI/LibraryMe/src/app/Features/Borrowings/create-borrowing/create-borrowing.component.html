@@ -1,0 +1,39 @@
+<div class="container">
+    <h1>Create borrowing</h1>
+    <div>Borrower</div>      <ng-select class="custom"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [items]="cards | async"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Select visitor's card"
+                                        [(ngModel)]="selectedCardId"
+                                        (change)="changeCard($event)"
+                                        (clear)="clearCard($event)">
+                            </ng-select>
+    <div class="selected-item-row" *ngIf="selectedCardId">
+        <div>
+            <p>{{selectedVisitorName}}</p>
+        </div>
+        <button (click)="clearCard(selectedVisitorCard)" class="close-btn">X</button>
+    </div>
+    <div>Books:</div>
+    <ng-select class="custom"
+               #bookSelect
+               [ngModelOptions]="{standalone: true}"
+               [items]="books | async"
+               bindLabel="title"
+               bindValue="id"
+               placeholder="Select visitor's card"
+               [(ngModel)]="selectedBookId"
+               (change)="changeBook($event)">
+    </ng-select>
+    <div *ngFor="let book of selectedBooks">
+        <div class="selected-item-row">
+            <div>
+                <p>{{book.title}}</p>
+            </div>
+            <button (click)="removeBook(book)" class="close-btn">X</button>
+        </div>
+    </div>
+    <button class="btn-primary" (click)="onSubmit()">Create borrowing</button>
+</div>

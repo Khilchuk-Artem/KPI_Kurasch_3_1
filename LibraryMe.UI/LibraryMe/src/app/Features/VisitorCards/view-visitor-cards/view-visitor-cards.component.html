@@ -1,0 +1,30 @@
+<div class="container">
+  <h1>Visitor cards:</h1>
+  <div class="relative" style="margin-bottom: 1rem">
+    <input type="text" class="search-bar" placeholder="Search by name" [(ngModel)]="searchQuery">
+    <button type="submit" class="search-lupa" (click)="updateCards()">
+      <img src="./assets/1200px-Magnifying_glass_icon.svg.svg" class="lupa-img">
+    </button>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th >Name</th>
+      <th >Card number</th>
+      <th style="width:10%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let card of cards">
+      <td>{{ card.name }}</td>
+      <td>
+        {{card.id}}
+      </td>
+      <td>
+        <button class="light-btn" [routerLink]="['/visitor-cards',card.id]">View</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn-primary" (click)="loadMore()">Load more</button>
+</div>

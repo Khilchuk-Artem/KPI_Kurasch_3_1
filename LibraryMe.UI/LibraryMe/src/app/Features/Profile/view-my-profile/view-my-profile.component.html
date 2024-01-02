@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="info-container">
+        <div class="links">
+            <div>
+                <a [routerLink]="['/borrowings']" class="link">Borrowings</a>
+                <a [routerLink]="['/reservations']" class="link">Reservations</a>
+                <a [routerLink]="['/bookmarks']" class="link">Bookmarks</a>
+            </div>
+            <button class="btn-alert vert-centered" (click)="onLogout()">Logout</button>
+        </div>
+        <div class="profile-info">
+            <h1>My profile</h1>
+            <p>Name: {{ user?.name }}</p>
+            <p>Email: {{ user?.email }}</p>
+            <p>Visitors card:
+              <a [routerLink]="['/visitor-cards',user?.visitorsCardId ]" *ngIf="user?.visitorsCardId">№{{ user?.visitorsCardId }}</a>
+              <a *ngIf="!user?.visitorsCardId">None</a>
+            </p>
+            <button class="btn-primary" [routerLink]="[user?.userId,'edit']" *ngIf="isLibrarian()||canAccessProfile()">Edit</button>
+        </div>
+    </div>
+</div>

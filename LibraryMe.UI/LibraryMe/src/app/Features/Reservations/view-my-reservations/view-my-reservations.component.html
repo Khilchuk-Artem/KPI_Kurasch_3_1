@@ -1,0 +1,22 @@
+<div class="container">
+    <h1>My reservations:</h1>
+
+    <table>
+        <thead>
+
+        </thead>
+        <tbody>
+        <tr *ngFor="let reservation of reservations">
+            <td>№{{reservation.reservationId}}<p>{{ reservation.creator }}</p></td>
+            <td>{{ reservation.createdTime | date: "dd.MM.YYYY" }}</td>
+            <td>
+                <div [ngClass]="getBoxClass(reservation.status)">{{ reservation.status }}</div>
+            </td>
+            <td>
+                <button class="light-btn" [routerLink]="['/reservations', reservation.reservationId]">View</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button class="btn-primary" (click)="loadMore()">Load more</button>
+</div>

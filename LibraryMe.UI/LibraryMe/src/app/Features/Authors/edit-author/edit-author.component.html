@@ -1,0 +1,43 @@
+<div class="container">
+  <h1>Edit author</h1>
+  <form [formGroup]="authorForm" (ngSubmit)="onSubmit()">
+    <input type="file" (change)="onFileSelected($event)" formControlName="file" />
+    <div class="fields-grid">
+      <div>
+        <label for="authorName" class="field-label">Input name</label>
+        <input type="text" id="authorName" placeholder="John" class="text-field" formControlName="name">
+      </div>
+      <div>
+        <label for="authorSurname" class="field-label">Input surname</label>
+        <input type="text" id="authorSurname" placeholder="Doe" class="text-field" formControlName="surname">
+      </div>
+      <div>
+        <label for="authorPatronymic" class="field-label">Input patronymic</label>
+        <input type="text" id="authorPatronymic" placeholder="Johnovich" class="text-field" formControlName="patronymic">
+      </div>
+      <div class="items-row">
+        <div>
+          <label for="birthDate" class="field-label">Select birth date</label>
+          <div>
+            <input type="date" id="birthDate" class="block w-full border-gray-300 rounded-md shadow-sm" formControlName="dateOfBirth">
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 datepicker-icon"></div>
+          </div>
+        </div>
+        <div>
+          <label for="deathDate" class="block text-sm font-medium text-gray-700">Select death date(if deceased)</label>
+          <div>
+            <input type="date" id="deathDate" class="block w-full border-gray-300 rounded-md shadow-sm" formControlName="dateOfDeath">
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 datepicker-icon"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label for="biography" class="field-label">Input short info</label>
+      <textarea id="biography" rows="10" class="short-info-input" formControlName="biography"></textarea>
+    </div>
+    <button type="submit" class="btn-primary" [disabled]="!authorForm.valid" style="margin-right: 1rem">Save</button>
+    <button type="submit" class="btn-alert" (click)="onDelete()">Delete</button>
+
+  </form>
+</div>

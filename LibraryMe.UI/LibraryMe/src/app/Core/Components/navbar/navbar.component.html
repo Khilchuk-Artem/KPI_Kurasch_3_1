@@ -1,0 +1,49 @@
+
+  <nav class="navbar-container">
+    <div class="navbar-content-container">
+      <div class="items-row">
+        <img src="./favicon.ico">
+        <h1 class="title">
+          LibraryMe
+        </h1>
+      </div>
+      <div class="items-row">
+          <a [routerLink]="['']" class="link">Home</a>
+          <a [routerLink]="['books']" class="link">Books</a>
+          <a [routerLink]="['authors']" class="link">Authors</a>
+          <a [routerLink]="['announcements']" class="link">Announcements</a>
+        <li class="link dropdown" *ngIf="isLibrarian()">
+          <a>Admin panel</a>
+          <div class="dropdown-content">
+            <a [routerLink]="['borrowings/create']">Create borrowing</a>
+            <a [routerLink]="['visitor-cards/create']">Create visitor card</a>
+            <a [routerLink]="['visitor-cards/all']">View visitor cards</a>
+            <a [routerLink]="['reservations/all']">View reservations</a>
+            <a [routerLink]="['profiles/all']">View users</a>
+            <a [routerLink]="['borrowings/all']">View borrowings</a>
+          </div>
+        </li>
+        <div class="relative">
+          <input type="text" class="search-bar" placeholder="Search a book" [(ngModel)]="myQuery">
+          <button type="submit" class="search-lupa" [routerLink]="['/books/search']" [queryParams]="{searchQuery: myQuery}"
+                  (click)="checkClick()"><img src="./assets/1200px-Magnifying_glass_icon.svg.svg" class="lupa-img"></button>
+        </div>
+      </div>
+      <div class="items-row">
+        <ng-container *ngIf="user === undefined;else showInfo">
+          <div class="items-row">
+            <button [routerLink]="['/login']" class="btn-primary no-margin">Login</button>
+          </div>
+        </ng-container>
+        <ng-template #showInfo>
+          <div class="ml-4">
+            <a class="hello-txt" [routerLink]="['profile']" class="no-decor">Hello, {{user?.name}}</a>
+          </div>
+          <div class="ml-4">
+            <button class="book-bag"[routerLink]="['bookbag']"><img src="./assets/shopping-bag-svgrepo-com.svg" class="bag-img"></button>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </nav>

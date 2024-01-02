@@ -1,0 +1,7 @@
+<div class="container">
+    <h1>Bookmarks:</h1>
+    <div *ngFor="let bookmark of bookmarks" class="bookmark">
+        <a [routerLink]="['/books', bookmark.bookId]" class="link">{{ bookmark.title }}</a>
+        <button class="btn-alert" (click)="removeBookmark(bookmark.id)">Remove bookmark</button>
+    </div>
+</div>

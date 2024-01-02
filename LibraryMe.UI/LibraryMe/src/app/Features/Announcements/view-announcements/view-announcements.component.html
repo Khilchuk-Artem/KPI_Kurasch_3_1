@@ -1,0 +1,14 @@
+<div class="container">
+    <h1>Announcements</h1>
+    <button [routerLink]="['create']" class="btn-success" *ngIf="isLibarian()">Add announcement</button>
+  <div *ngIf="!announcements||announcements.length===0">
+    {{holdOnMsg}}
+  </div>
+    <div *ngFor="let announcement of announcements" class="announcement-container">
+        <p>{{ announcement.dateCreated | date: 'dd.MM.yy - HH:mm' }}</p>
+        <h2>{{ announcement.title }}</h2>
+        <p>{{ announcement.content }}...</p>
+        <button class="btn-primary" [routerLink]="[announcement.id]">Learn more</button>
+    </div>
+  <button class="btn-primary" [disabled]="isLoading" *ngIf="hasNext" (click)="loadMore()">Load more</button>
+</div>

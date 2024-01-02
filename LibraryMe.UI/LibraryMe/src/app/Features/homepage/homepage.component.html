@@ -1,0 +1,18 @@
+
+  <div class="container">
+    <div class="items-row">
+      <div class="info-container">
+        <h1>Welcome to LibraryMe!</h1>
+        <p class="subtitle">Feel free to discover new books, authors and make remote reservations!</p>
+      </div>
+      <img class="huge-img" src="assets/pexels-ivo-rainha-1290141.jpg">
+    </div>
+
+    <h3>Latest news:</h3>
+      <div *ngFor="let announcement of announcements" class="announcement-container">
+        <p>{{ announcement.dateCreated | date: 'dd.MM.yy - HH:mm' }}</p>
+        <h2>{{ announcement.title }}</h2>
+        <p>{{ announcement.content }}...</p>
+        <button class="btn-primary" [routerLink]="['/announcements',announcement.id]">Learn more</button>
+      </div>
+  </div>

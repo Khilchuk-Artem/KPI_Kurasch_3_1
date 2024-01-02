@@ -1,0 +1,16 @@
+<div class="container" *ngIf="borrowing">
+  <h1>Borrowing</h1>
+  <p>Date: {{ borrowing.dateCreated| date: 'dd.MM.yy , HH:mm' }} </p>
+  <p>Due Date: {{borrowing.dueDate| date: 'dd.MM.yy , HH:mm' }}</p>
+  <p>Borrower: {{ borrowing.borrower }}</p>
+  <p>Status:</p> <div [ngClass]="getBoxClass(borrowing.status)">{{ borrowing.status }}</div>
+  <p>Books:</p>
+  <div *ngFor="let book of borrowing.books" class="selected-item-row">
+    <h3>{{ book.title }}</h3>
+    <p><ng-container *ngFor="let author of book?.authors; let i = index">
+      <a [routerLink]="['/authors', author.authorId]">{{ author.name }}</a>
+      <span *ngIf="i!==(book?.authors?.length ?? 0)-1">, </span>
+    </ng-container></p>
+  </div>
+  <button class="btn-primary" (click)="markAsReturned()" *ngIf="borrowing.status!=='Returned'">Mark as returned</button>
+</div>

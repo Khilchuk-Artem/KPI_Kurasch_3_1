@@ -1,0 +1,7 @@
+<div class="container">
+  <h1>All Books</h1>
+  <button class="btn-success" [routerLink]="['create']" *ngIf="isLibrarian()">Add book</button>
+  <ng-container *ngFor="let genre of genres">
+    <app-view-books-by-genre [genre]="genre"></app-view-books-by-genre>
+  </ng-container>
+</div>

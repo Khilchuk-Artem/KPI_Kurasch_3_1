@@ -1,0 +1,39 @@
+<div class="container" *ngIf="reservation">
+    <h1>Reservation №{{ reservation.reservationId }}</h1>
+
+    <div class="row">
+        <div style="width: 60%">
+            <p>Status:</p>
+            <div [ngClass]="getBoxClass(reservation.status)">{{ reservation.status }}</div>
+            <p>Books:</p>
+            <div class="selected-item-row" *ngFor="let book of reservation.books">
+                <div>
+                    <h3>{{book.title}}</h3>
+                    <p><ng-container *ngFor="let author of book?.authors; let i = index">
+                        <a [routerLink]="['/authors', author.authorId]">{{ author.name }}</a>
+                        <span *ngIf="i!==(book?.authors?.length ?? 0)-1">, </span>
+                    </ng-container></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="item-container">
+            <h3>Created time:</h3>
+            <p>{{ reservation.createdTime | date: 'HH:mm, dd.MM.yy' }}</p>
+            <div>
+                <h3 *ngIf="reservation.acceptedTime">Accepted time:</h3>
+                <p>{{ reservation.acceptedTime | date: 'HH:mm, dd.MM.yy' }}</p>
+            </div>
+            <div *ngIf="reservation.checkOutTime">
+                <h3>Checked out time:</h3>
+                <p>{{ reservation.checkOutTime | date: 'HH:mm, dd.MM.yy' }}</p>
+            </div>
+        </div>
+    </div>
+  <div *ngIf="isLibrarian()">
+    <div *ngIf="reservation.status==='Processing'">
+      <button class="btn-primary" (click)="acceptReservation()">Accept</button>
+      <button class="btn-alert" (click)="declineReservation()">Decline</button></div>
+    <div *ngIf="reservation.status==='Accepted'"><button class="btn-primary" (click)="ckeckOutReservation()">Mark as checked out</button></div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="container">
+  <h1>Register visitor</h1>
+
+  <form [formGroup]="visitorForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="vertical-container">
+        <p>Name</p>
+        <p>Surname</p>
+        <p>Patronymic</p>
+        <p>Phone number</p>
+      </div>
+      <div class="vertical-container">
+        <input formControlName="name" placeholder="Joe">
+        <input formControlName="surname" placeholder="Doe">
+        <input formControlName="patronymic" placeholder="Johnovych">
+        <input formControlName="phoneNumber" placeholder="056-778-4869">
+      </div>
+    </div>
+    <button type="submit" class="btn-primary">Save</button>
+  </form>
+</div>

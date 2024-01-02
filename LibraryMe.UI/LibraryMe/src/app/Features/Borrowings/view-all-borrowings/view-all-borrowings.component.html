@@ -1,0 +1,54 @@
+<div class="container">
+  <h1>My borrowings:</h1>
+  <div class="row">
+    <div style="margin-right: 10rem">
+      <div class="relative">
+        <input type="text" class="search-bar" placeholder="Search a book" [(ngModel)]="selectedQuery">
+        <button type="submit" class="search-lupa"><img src="./assets/1200px-Magnifying_glass_icon.svg.svg" class="lupa-img" (click)="onSearch()"></button>
+      </div>
+      <label for="option2">
+        <input type="checkbox" id="option2" name="options" value="option2" class="checkbox" (change)="handleCheckboxChange()">
+        Hide returned
+      </label>
+    </div>
+  <div>
+    <div>
+      <label for="startDate" class="field-label">Select start date</label>
+      <div>
+        <input type="date" id="startDate" class="block w-full border-gray-300 rounded-md shadow-sm date-selection" (change)="onStartDateChange($event)">
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 datepicker-icon"></div>
+      </div>
+    </div>
+    <div>
+      <label for="endDate" class="field-label">Select end date</label>
+      <div>
+        <input type="date" id="endDate" class="block w-full border-gray-300 rounded-md shadow-sm date-selection" (change)="onEndDateChange($event)">
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 datepicker-icon"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th >Borrower</th>
+      <th >Date created</th>
+      <th >Status</th>
+      <th style="width:10%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let borrowing of borrowings">
+      <td>{{ borrowing.creator }}</td>
+      <td>{{ borrowing.createdDate }}</td>
+      <td>
+        <div [ngClass]="getBoxClass(borrowing.status)">{{ borrowing.status }}</div>
+      </td>
+      <td>
+        <button class="light-btn" [routerLink]="['/borrowings',borrowing.borrowingId]">View</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn-primary" (click)="loadMore()">Load more</button>
+</div>

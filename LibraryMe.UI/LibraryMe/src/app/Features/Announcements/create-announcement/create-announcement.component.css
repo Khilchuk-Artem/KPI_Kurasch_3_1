@@ -1,0 +1,126 @@
+.row{
+    display: flex;
+}
+.field-label{
+    display: block;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 900;
+    color: #374151;
+    font-family: 'M PLUS 1p', sans-serif;
+}
+.text-field{
+    display: block;
+    margin-top: 0.25rem;
+    border-radius: 0.375rem;
+    border-color: #D1D5DB;
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.items-row{
+    display: flex;
+    justify-content: space-evenly;
+}
+.short-info-input{
+    display: block;
+    margin-top: 0.25rem;
+    border-radius: 0.375rem;
+    border-color: #D1D5DB;
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+textarea {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    resize: none;
+    white-space: pre-wrap;
+}
+
+body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    /* Body position must be relative while using appendTo */
+    position: relative;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+.row{
+    display: flex;
+}
+.multi-select-column{
+    margin-right: 1rem;
+    width: 500px;
+}
+.selected-items-list{
+    width: fit-content;
+}
+.selected-item-row{
+    background-color: #a8abb2;
+    display: flex;
+    width: fit-content;
+    padding: 0.25rem;
+    min-width: 110px;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+.close-btn{
+    background: none;
+    border: 0px;
+    color: red;
+    font-size: 1rem;
+    cursor:pointer;
+}
+
+
+.text-field{
+    width: 80%;
+}
+.number-field{
+    width: 100px;
+}
+.vertical-container{
+    display: flex;
+    flex-direction: column;
+}
+input {
+    display: block;
+    width: 90%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.input-row{
+    text-align: left;
+    margin:12px;
+}

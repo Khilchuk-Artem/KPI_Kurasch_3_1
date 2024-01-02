@@ -1,0 +1,25 @@
+.row{
+    display: flex;
+    justify-content: space-between;
+}
+.selected-item-row{
+    background-color: #a8abb2;
+    display: flex;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    justify-content: space-between;
+}
+.close-btn{
+    background: none;
+    border: 0px;
+    color: red;
+    font-size: 2rem;
+    cursor:pointer;
+}
+.item-container{
+    background-color: #a8abb2;
+    width: 30%;
+    padding: 1rem;
+}
+

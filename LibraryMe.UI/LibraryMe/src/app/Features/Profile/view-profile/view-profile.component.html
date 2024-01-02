@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="info-container">
+    <div class="profile-info">
+      <h1>Users profile:</h1>
+      <p>Name: {{ user?.name }}</p>
+      <p>Email: {{ user?.email }}</p>
+      <p>Visitors card:
+        <a [routerLink]="['/visitor-cards',user?.visitorCardId ]" *ngIf="user?.visitorCardId">№{{ user?.visitorCardId }}</a>
+        <a *ngIf="!user?.visitorCardId">None</a>
+      </p>
+      <button class="btn-primary" [routerLink]="['edit']">Edit</button>
+    </div>
+  </div>
+</div>

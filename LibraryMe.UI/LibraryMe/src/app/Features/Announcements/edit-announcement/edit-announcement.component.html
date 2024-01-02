@@ -1,0 +1,14 @@
+<div class="container">
+    <h1>Edit announcement</h1>
+    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()">
+        <div class="input-row">
+            <label for="title" class="field-label">Title</label>
+            <input type="text" id="title" placeholder="" class="text-field" formControlName="title">
+        </div>
+        <div class="input-row">
+            <label for="content" class="field-label">Input content:</label>
+            <textarea id="content" rows="20" class="short-info-input" formControlName="content"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>

@@ -1,0 +1,9 @@
+.announcement-container{
+    justify-content: space-between;
+    background-color: #dde1e5;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+p{
+    color: #1F2937;
+}

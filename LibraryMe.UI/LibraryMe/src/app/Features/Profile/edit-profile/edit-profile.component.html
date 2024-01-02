@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="profile-info">
+    <h1>Edit profile</h1>
+    <form [formGroup]="userProfileForm" (ngSubmit)="onSubmit()">
+      <div class="input-row">
+        <label for="name" class="field-label">Name</label>
+        <input type="text" id="name" placeholder="Johny69420" class="text-field" formControlName="name">
+      </div>
+      <ng-select class="custom"
+                 [ngModelOptions]="{standalone: true}"
+                 [items]="cards | async"
+                 bindLabel="name"
+                 bindValue="id"
+                 placeholder="Select visitor's card"
+                 [(ngModel)]="selectedCardId"
+                 (change)="changeCard($event)"
+                 (clear)="clearCard($event)">
+      </ng-select>
+      <h3>Visitor's card number:</h3>
+      <p *ngIf="!selectedCardId">None</p>
+      <p *ngIf="selectedCardId"> №{{ selectedCardId }}</p>
+      <button type="submit" class="btn-primary register-btn">Save</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.row{
+  background-color: #dde1e5;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 1rem;
+}
+.light-btn{
+  width: 120px;
+}
+.search-bar{
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-right: 4rem;
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-color: #111827;
+  border-style: double;
+}
+.search-lupa{
+  position: relative;
+  top: 4px;
+  right: 38px;
+  margin-top: 0.75rem;
+  margin-right: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.lupa-img{
+  max-width: 18px;
+}

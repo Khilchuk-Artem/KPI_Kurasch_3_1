@@ -1,0 +1,19 @@
+.row{
+  display: flex;
+  justify-content: space-between;
+}
+.book-img{
+  width:300px;
+  height: fit-content;
+}
+.info{
+  width:600px;
+}
+.buttons-column{
+  display: flex;
+  flex-direction: column;
+}
+.mg-top{
+  margin-top: 1rem;
+  width: 150px;
+}
