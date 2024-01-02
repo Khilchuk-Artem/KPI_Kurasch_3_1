@@ -1,6 +1,4 @@
-﻿using BookLibrary.Models.Domain;
-
-namespace BookLibrary.Models.DTO
+﻿namespace BookLibrary.Models.DTO
 {
     public class BookDTO
     {

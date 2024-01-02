@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BookLibrary.Models.DTO
+﻿namespace BookLibrary.Models.DTO
 {
     public class UpdateUserDTO
     {

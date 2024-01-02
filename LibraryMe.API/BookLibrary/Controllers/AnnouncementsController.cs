@@ -1,103 +1,74 @@
-﻿using AutoMapper;
-using BookLibrary.Data;
-using BookLibrary.Models.Domain;
-using BookLibrary.Models.DTO;
-using Microsoft.AspNetCore.Authorization;
+﻿using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.DAL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookLibrary.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AnnouncementsController : Controller
+    public class AnnouncementsController : ControllerBase
     {
-        private readonly BookLibraryDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IAnnouncementService _announcementRepo;
 
-        public AnnouncementsController(BookLibraryDbContext dbContext, IMapper mapper)
+        public AnnouncementsController(IAnnouncementService announcementRepo)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _announcementRepo = announcementRepo;
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetAnnouncementById(Guid id)
         {
-            var announcement = await _dbContext.Announcements.Where(a => !a.IsDeleted).FirstOrDefaultAsync(a => a.Id == id);
+            var announcement = await _announcementRepo.GetAnnouncementById(id);
 
             if (announcement == null) return NotFound();
 
-            var dto = _mapper.Map<AnnouncementDTO>(announcement);
-
-            return Ok(dto);
+            return Ok(announcement);
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetAnnouncementsAsync([FromQuery] int pageSize=5, [FromQuery] int pageNumber=1) 
+        public async Task<IActionResult> GetAnnouncementsAsync([FromQuery] int pageSize = 5, [FromQuery] int pageNumber = 1)
         {
-            var results = await _dbContext.Announcements.Where(a => !a.IsDeleted).OrderByDescending(a => a.CreatedDate).Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(a => _mapper.Map<AnnouncementDTO>(a)).ToListAsync();
+            var announcements = await _announcementRepo.GetAnnouncementsAsync(pageSize, pageNumber);
 
-            return Ok(results);
+            return Ok(announcements);
         }
+
         [HttpGet("summaries")]
         public async Task<IActionResult> GetAnnouncementSummariesAsync([FromQuery] int pageSize = 5, [FromQuery] int pageNumber = 1)
         {
-            var results = await _dbContext.Announcements
-                .Where(a => !a.IsDeleted)
-                .OrderByDescending(a => a.CreatedDate)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(a => new AnnouncementDTO()
-                {
-                    Id=a.Id,
-                    Title = a.Title,
-                    Content = a.Content.Substring(0, Math.Min(a.Content.Length, 300)),
-                    DateCreated=a.CreatedDate
-                }).ToListAsync();
+            var summaries = await _announcementRepo.GetAnnouncementSummariesAsync(pageSize, pageNumber);
 
-            return Ok(results);
+            return Ok(summaries);
         }
+
         [HttpPost]
         //[Authorize]
         public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementDTO dto)
         {
-            var announcement = _mapper.Map<Announcement>(dto);
-            announcement.CreatedDate = DateTime.Now;
-            await _dbContext.Announcements.AddAsync(announcement);
-            await _dbContext.SaveChangesAsync();
+            var createdId = await _announcementRepo.CreateAnnouncement(dto);
 
-            return CreatedAtAction(nameof(GetAnnouncementById), new { id = announcement.Id }, dto);
+            return CreatedAtAction(nameof(GetAnnouncementById), new { id = createdId }, dto);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAnnouncement([FromBody] UpdateAnnouncementDTO dto, Guid id)
         {
-            var announcement = await _dbContext.Announcements.Where(a=>!a.IsDeleted).FirstOrDefaultAsync(a => a.Id == id);
+            var updatedAnnouncement = await _announcementRepo.UpdateAnnouncement(dto, id);
 
-            if (announcement == null) return NotFound();
+            if (updatedAnnouncement == null) return NotFound();
 
-            announcement.Title = dto.Title;
-            announcement.Content=dto.Content;
-
-            _dbContext.Announcements.Update(announcement);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(_mapper.Map<AnnouncementDTO>(announcement));
+            return Ok(updatedAnnouncement);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAnnouncement(Guid id)
         {
-            var announcement = await _dbContext.Announcements.FirstOrDefaultAsync(a => a.Id == id);
+            var deletedAnnouncement = await _announcementRepo.DeleteAnnouncement(id);
 
-            if (announcement == null) return NotFound();
+            if (deletedAnnouncement == null) return NotFound();
 
-            announcement.IsDeleted = true;
-
-            _dbContext.Announcements.Update(announcement);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(_mapper.Map<AnnouncementDTO>(announcement));
+            return Ok(deletedAnnouncement);
         }
     }
+
 }

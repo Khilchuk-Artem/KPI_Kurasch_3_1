@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using BookLibrary.Data;
-using BookLibrary.Models.Domain;
-using BookLibrary.Models.DTO;
+﻿using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.DAL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BookLibrary.Controllers
 {
@@ -12,124 +8,60 @@ namespace BookLibrary.Controllers
     [Route("api/[controller]")]
     public class BorrowingsController : Controller
     {
-        private readonly BookLibraryDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IBorrowingService _borrowingService;
 
-        public BorrowingsController(BookLibraryDbContext dbContext, IMapper mapper)
+        public BorrowingsController(IBorrowingService borrowingService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _borrowingService = borrowingService;
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetBorrowingById(Guid id)
         {
-            var borrowing = await _dbContext.Borrowings
-                .Include(b => b.Books).ThenInclude(b => b.Image)
-                .Include(b => b.Books)
-                    .ThenInclude(book => book.Authors)
-                .Include(b => b.VisitorsCard)
-                .Include(b => b.BorrowingStatus)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            var borrowing = await _borrowingService.GetBorrowingById(id);
 
             if (borrowing == null)
                 return NotFound();
-            if (borrowing.Books == null)
-                return NotFound();
-            var dto = _mapper.Map<BorrowingDTO>(borrowing);
 
-            return Ok(dto);
+            return Ok(borrowing);
         }
 
         [HttpGet("summaries")]
-        public async Task<IActionResult> GetBorrowingSummariesAsync([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1, [FromQuery] int? borrowerCardId=null, 
-            [FromQuery] string borrowerName = null, [FromQuery] bool hideReturned = false, [FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate=null)
+        public async Task<IActionResult> GetBorrowingSummariesAsync([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1, [FromQuery] int? borrowerCardId = null, [FromQuery] string borrowerName = null, [FromQuery] bool hideReturned = false, [FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
         {
+            var borrowings = await _borrowingService.GetBorrowingSummariesAsync(pageSize, pageNumber, borrowerCardId, borrowerName, hideReturned, startDate, endDate);
 
-            var query = _dbContext.Borrowings
-                .Include(b => b.VisitorsCard)
-                .Include(b => b.BorrowingStatus)
-                .OrderByDescending(b => b.DateCreated).AsQueryable();
-            if (borrowerCardId.HasValue)
-            {
-                query = query.Where(b => b.VisitorsCardId == borrowerCardId);
-            }
-            if (hideReturned)
-            {
-                query = query.Where(b => b.BorrowingStatusId != Guid.Parse("76C30481-34B8-493E-857E-75622551A448"));
-            }
-            if (borrowerName != null)
-            {
-                query = query.Where(b => (b.VisitorsCard.Surname+ " "+ b.VisitorsCard.Name + " "+b.VisitorsCard.Patronymic).Contains(borrowerName));
-            }
-            if (startDate != null)
-            {
-                query = query.Where(b => b.DateCreated>=startDate.Value);
-            }
-            if (endDate != null)
-            {
-                query = query.Where(b =>b.DateCreated <= endDate.Value);
-            }
-            var results= await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(b => new BorrowingSummaryDTO
-                {
-                    BorrowingId = b.Id,
-                    CreatedDate = DateOnly.FromDateTime(b.DateCreated.Date),
-                    Status = b.BorrowingStatus.Name,
-                    Creator = $"{b.VisitorsCard.Name} {b.VisitorsCard.Surname}"
-                })
-                .ToListAsync();
-
-            return Ok(results);
+            return Ok(borrowings);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateBorrowing([FromBody] CreateBorrowingDTO dto)
         {
-            var books = await _dbContext.Books.Where(b => !b.IsDeleted && dto.BookIds.Contains(b.Id)).ToListAsync();
-            if (books.Count != dto.BookIds.Count()) return BadRequest();
-            var borrowing = new Borrowing()
-            {
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(14),
-                VisitorsCardId = dto.BorrowerId,
-                BorrowingStatusId = Guid.Parse("73bb3243-c71c-4f1b-ba1f-f4fc56b5dee2"),
-                Books = books
-            };
-            await _dbContext.Borrowings.AddAsync(borrowing);
-            await _dbContext.SaveChangesAsync();
+            var createdId = await _borrowingService.CreateBorrowing(dto);
 
-            return CreatedAtAction(nameof(GetBorrowingById), new { id = borrowing.Id }, borrowing.Id);
+            return CreatedAtAction(nameof(GetBorrowingById), new { id = createdId }, dto);
         }
+
         [HttpPut("{id}/return")]
         public async Task<IActionResult> ReturnBorrowing(Guid id)
         {
-            var borrowing = await _dbContext.Borrowings.FindAsync(id);
-            if(borrowing == null) return BadRequest();
-            borrowing.BorrowingStatusId = Guid.Parse("76C30481-34B8-493E-857E-75622551A448");
-            _dbContext.Update(borrowing);
-            await _dbContext.SaveChangesAsync();
+            var success = await _borrowingService.ReturnBorrowing(id);
+
+            if (!success)
+                return BadRequest();
 
             return Ok();
         }
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteBorrowing(Guid id)
         {
-            var borrowing = await _dbContext.Borrowings
-                .Include(b => b.Books)
-                .Include(b => b.VisitorsCard)
-                .Include(b => b.BorrowingStatus)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            var deletedBorrowing = await _borrowingService.DeleteBorrowing(id);
 
-            if (borrowing == null)
+            if (deletedBorrowing == null)
                 return NotFound();
 
-            _dbContext.Borrowings.Remove(borrowing);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(_mapper.Map<BorrowingDTO>(borrowing));
+            return Ok(deletedBorrowing);
         }
     }
 }

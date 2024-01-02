@@ -1,7 +1,6 @@
-﻿using BookLibrary.Models.DTO;
-using BookLibrary.Services;
+﻿using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.DAL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.NetworkInformation;
 
 namespace BookLibrary.Controllers
 {
@@ -9,8 +8,8 @@ namespace BookLibrary.Controllers
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly AuthService _authService;
-        public AuthController(AuthService authService)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

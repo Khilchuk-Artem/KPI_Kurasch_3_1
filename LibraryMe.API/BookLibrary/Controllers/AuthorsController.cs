@@ -1,124 +1,80 @@
-﻿using AutoMapper;
-using BookLibrary.Data;
-using BookLibrary.Models.Domain;
-using BookLibrary.Models.DTO;
+﻿using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.DAL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookLibrary.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthorsController : Controller
+    public class AuthorsController : ControllerBase
     {
-        private readonly BookLibraryDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IAuthorService _authorRepo;
 
-        public AuthorsController(BookLibraryDbContext dbContext, IMapper mapper)
+        public AuthorsController(IAuthorService authorRepo)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _authorRepo = authorRepo;
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetAuthorById(Guid id)
         {
-            var author = await _dbContext.Authors.Include(a => a.Image).Include(a=>a.Books).ThenInclude(b=>b.Image).Where(a => !a.IsDeleted).FirstOrDefaultAsync(a => a.Id == id);
+            var author = await _authorRepo.GetAuthorById(id);
 
             if (author == null) return NotFound();
 
-            var dto = _mapper.Map<AuthorDTO>(author);
-
-            return Ok(dto);
+            return Ok(author);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAuthorsAsync([FromQuery] int pageSize = 5, [FromQuery] int pageNumber = 1)
         {
-            var results = await _dbContext.Authors.Include(a => a.Image).Where(a => !a.IsDeleted)
-                .OrderBy(a => a.Name)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(a => _mapper.Map<AuthorDTO>(a))
-                .ToListAsync();
+            var authors = await _authorRepo.GetAuthorsAsync(pageSize, pageNumber);
 
-            return Ok(results);
+            return Ok(authors);
         }
+
         [HttpGet("summaries")]
-        public async Task<IActionResult> GetAuthorSummariesAsync([FromQuery] int pageSize = 5, [FromQuery] int pageNumber = 1, [FromQuery] string searchQuery="")
+        public async Task<IActionResult> GetAuthorSummariesAsync([FromQuery] int pageSize = 5, [FromQuery] int pageNumber = 1, [FromQuery] string searchQuery = "")
         {
-            var results = await _dbContext.Authors
-                .Include(a=>a.Image)
-                .Where(a => !a.IsDeleted)
-                .Where(a => (a.Name.ToLower() + " " + a.Patronymic.ToLower() + " " + a.Surname.ToLower()).Contains(searchQuery.ToLower()))
-                .OrderBy(a => a.Name)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(a => _mapper.Map<AuthorSummaryDTO>(a))
-                .ToListAsync();
+            var summaries = await _authorRepo.GetAuthorSummariesAsync(pageSize, pageNumber, searchQuery);
 
-            return Ok(results);
+            return Ok(summaries);
         }
+
         [HttpGet("links")]
         public async Task<IActionResult> GetAuthorLinksAsync()
         {
-            var results = await _dbContext.Authors
-                .Include(a => a.Image)
-                .Where(a => !a.IsDeleted)
-                //.Where(a => (a.Name.ToLower() + " " + a.Patronymic.ToLower() + " " + a.Surname.ToLower()).Contains(searchQuery.ToLower()))
-                .OrderBy(a => a.Name)
-                //.Skip((pageNumber - 1) * pageSize)
-                //.Take(pageSize)
-                .Select(a => _mapper.Map<AuthorLinkDTO>(a))
-                .ToListAsync();
+            var links = await _authorRepo.GetAuthorLinksAsync();
 
-            return Ok(results);
+            return Ok(links);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateAuthor([FromBody] CreateAuthorDTO dto)
         {
-            var author = _mapper.Map<Author>(dto);
+            var createdId = await _authorRepo.CreateAuthor(dto);
 
-            await _dbContext.Authors.AddAsync(author);
-            await _dbContext.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetAuthorById), new { id = author.Id }, author.Id);
+            return CreatedAtAction(nameof(GetAuthorById), new { id = createdId }, dto);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAuthor([FromBody] CreateAuthorDTO dto, Guid id)
         {
-            var author = await _dbContext.Authors.Include(a => a.Image).Where(a => !a.IsDeleted).FirstOrDefaultAsync(a => a.Id == id);
+            var updatedAuthor = await _authorRepo.UpdateAuthor(dto, id);
 
-            if (author == null) return NotFound();
+            if (updatedAuthor == null) return NotFound();
 
-            _mapper.Map(dto, author);
-
-            _dbContext.Authors.Update(author);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(_mapper.Map<AuthorDTO>(author));
+            return Ok(updatedAuthor);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {
-            var author = await _dbContext.Authors.Include(a=>a.Books).Include(a => a.Image).FirstOrDefaultAsync(a => a.Id == id);
+            var deletedAuthor = await _authorRepo.DeleteAuthor(id);
 
-            if (author == null) return NotFound();
-            var booksWithoutAuthor = author.Books.Where(b => b.Authors.Where(a=>!a.IsDeleted).Count() == 1).ToList();
+            if (deletedAuthor == null) return NotFound();
 
-            author.IsDeleted = true;
-            foreach(var b in booksWithoutAuthor)
-            {
-                b.IsDeleted = true;
-                _dbContext.Books.Update(b);
-
-            }
-            _dbContext.Authors.Update(author);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(_mapper.Map<AuthorDTO>(author));
+            return Ok(deletedAuthor);
         }
     }
 }

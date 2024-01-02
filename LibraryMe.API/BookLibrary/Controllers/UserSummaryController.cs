@@ -1,5 +1,6 @@
-﻿using BookLibrary.Models.DTO;
-using BookLibrary.Services;
+﻿using BookLibrary.BAL.Services.Implementations;
+using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.DAL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Controllers
@@ -8,9 +9,9 @@ namespace BookLibrary.Controllers
     [ApiController]
     public class UserSummaryController : ControllerBase
     {
-        private readonly UserSummaryService _userSummaryService;
+        private readonly IUserSummaryService _userSummaryService;
 
-        public UserSummaryController(UserSummaryService userSummaryService)
+        public UserSummaryController(IUserSummaryService userSummaryService)
         {
             _userSummaryService = userSummaryService;
         }

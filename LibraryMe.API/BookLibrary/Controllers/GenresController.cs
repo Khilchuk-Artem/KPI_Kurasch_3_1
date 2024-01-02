@@ -1,5 +1,4 @@
-﻿using BookLibrary.Data;
-using BookLibrary.Models.DTO;
+﻿using BookLibrary.BAL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Controllers
@@ -8,25 +7,19 @@ namespace BookLibrary.Controllers
     [Route("api/[controller]")]
     public class GenresController : Controller
     {
-        private readonly BookLibraryDbContext _dbContext; // Add your DbContext instance
+        private readonly IGenreService _genreService;
 
-        public GenresController(BookLibraryDbContext dbContext)
+        public GenresController(IGenreService genreService)
         {
-            _dbContext = dbContext;
+            _genreService = genreService;
         }
 
         [HttpGet]
-        public IActionResult GetGenres()
+        public async Task<IActionResult> GetGenres()
         {
-            var genresFromDb = _dbContext.Genres.ToList();
+            var genres = await _genreService.GetGenres();
 
-            var genreDTOs = genresFromDb.Select(genre => new GenreDTO
-            {
-                Id = genre.Id,
-                Name = genre.Name
-            }).ToList();
-
-            return Ok(genreDTOs);
+            return Ok(genres);
         }
     }
 }

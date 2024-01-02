@@ -1,14 +1,23 @@
-using BookLibrary.Data;
-using BookLibrary.Mappings;
-using BookLibrary.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
+using Quartz;
+using BookLibrary.Jobs;
+//using BookLibrary.BAL.Services.Interfaces;
+//using BookLibrary.DAL.Repositories.Interfaces;
+//using BookLibrary.BAL.Services.Implementations;
+//using BookLibrary.DAL.Repositories.Implementations;
+using BookLibrary.DAL.Repositories.Interfaces;
+using BookLibrary.DAL.Repositories.Implementations;
+using BookLibrary.DAL.Mappings;
+
+using BookLibrary.BAL.Services.Interfaces;
+using BookLibrary.BAL.Services.Implementations;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,20 +58,72 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BookLibraryDbContext>(options => {
-    options.UseSqlServer(connection);
+builder.Services.AddDbContext<BookLibrary.DAL.Data.BookLibraryDbContext>(options =>
+{
+    options.UseSqlServer(connection, b => b.MigrationsAssembly("BookLibrary"));
 });
-builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+builder.Services.AddQuartz(configure =>
+{
+    var borrowingsJobKey = new JobKey(nameof(ExpireBorrowingsJob));
+    configure
+        .AddJob<ExpireBorrowingsJob>(borrowingsJobKey)
+        .AddTrigger(
+            trigger => trigger.ForJob(borrowingsJobKey).WithSimpleSchedule(
+                schedule => schedule.WithIntervalInHours(6).RepeatForever()));
+
+    var reservationsJobKey = new JobKey(nameof(ExpireReservationsJob));
+    configure
+        .AddJob<ExpireReservationsJob>(reservationsJobKey)
+        .AddTrigger(
+            trigger => trigger.ForJob(reservationsJobKey).WithSimpleSchedule(
+                schedule => schedule.WithIntervalInHours(2).RepeatForever()));
+
+    configure.UseMicrosoftDependencyInjectionJobFactory();
+});
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
+});
+
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfiles)));
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ImageUploaderService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<UserSummaryService>();
+builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.AddScoped<IUserSummaryService,UserSummaryService>();
+
+builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+builder.Services.AddScoped<IAnnouncementService,AnnouncementService>();
+
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
+builder.Services.AddScoped<IBookmarkRepository, BookmarkRepository>();
+builder.Services.AddScoped<IBookmarkService, BookmarkService>();
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
+
+builder.Services.AddScoped<IBorrowingRepository, BorrowingRepository>();
+builder.Services.AddScoped<IBorrowingService, BorrowingService>();
+
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IImageService, ImageService>();
+
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+
+builder.Services.AddScoped<IVisitorCardRepository, VisitorCardRepository>();
+builder.Services.AddScoped<IVisitorCardService, VisitorCardService>();
 
 builder.Services
     .AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("BookLibrary")
-    .AddEntityFrameworkStores<BookLibraryDbContext>()
+    .AddEntityFrameworkStores<BookLibrary.DAL.Data.BookLibraryDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
