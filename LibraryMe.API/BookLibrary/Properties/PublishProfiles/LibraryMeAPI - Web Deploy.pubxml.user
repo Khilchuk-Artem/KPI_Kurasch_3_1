@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAvVVQsTIlBEK3uvlLQv2ygQAAAAACAAAAAAAQZgAAAAEAACAAAABNfZOnLC0kTaNaADNIhM3IQwO0ZWRlsOuml6M6Sd6r8QAAAAAOgAAAAAIAACAAAACEwYP5pBm8tkRFd/xe7uI+Tgb9+7NNz235XLpDP4n5M4AAAADqxs+pLGQ+Vq3+Hp6wSxu4+nnKTcSL+RpBmLgKlHPLyW+pCWDmqwQR/dc6g4/aSOKl0kRnzL6Nr4o4GO49c1bNAwvG112fQG4/tS5zOPnoYOcGVW/ZeMV8hDjWRqcNovPuycdt/Mb6HB5XYCb8QBeVoLLkrQElyFRz3EeIFWs2WUAAAAAmT9tv3SDFKlOXdMr6LkXJZQonHoBUh4gRRUoI9Gqx2jQvNHsTTUw+MSw7T/39Lhi7T0506U8+eiqqLwOWYbKS</EncryptedPassword>
+    <History>True|2023-12-28T18:58:14.2632870Z;True|2023-12-28T20:53:37.4725017+02:00;False|2023-12-28T20:52:40.3369701+02:00;False|2023-12-28T20:51:25.0942865+02:00;False|2023-12-28T20:50:40.2438216+02:00;False|2023-12-28T20:48:54.7165352+02:00;False|2023-12-28T20:44:48.2985026+02:00;False|2023-12-28T20:41:18.9188559+02:00;False|2023-12-28T20:39:10.0777827+02:00;False|2023-12-28T20:37:44.7512532+02:00;False|2023-12-28T20:36:32.1558333+02:00;True|2023-12-28T20:27:32.1752800+02:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=tcp:librarymedatabaseserver.database.windows.net,1433%3bInitial Catalog=BookLibrary_db%3bPersist Security Info=False%3bUser ID=LibraryMeBestAdminCobalt%3bPassword=VeryGoodLibraryMePassword123%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="BookLibrary.Data.BookLibraryDbContext">
+      <Value>Server=tcp:librarymedatabaseserver.database.windows.net,1433%3bInitial Catalog=BookLibrary_db%3bPersist Security Info=False%3bUser ID=LibraryMeBestAdminCobalt%3bPassword=VeryGoodLibraryMePassword123%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>
